@@ -1,4 +1,4 @@
-package com.example.admin.myapplication;
+package com.example.admin.hotcall;
 
 import org.junit.Test;
 

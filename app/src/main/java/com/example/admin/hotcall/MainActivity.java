@@ -1,4 +1,4 @@
-package com.example.admin.myapplication;
+package com.example.admin.hotcall;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
-import com.example.admin.myapplication.Common.DBHelper;
-import com.example.admin.myapplication.Common.Utils;
+import com.example.admin.hotcall.Common.DBHelper;
+import com.example.admin.hotcall.Common.Utils;
 
 import java.util.Locale;
 

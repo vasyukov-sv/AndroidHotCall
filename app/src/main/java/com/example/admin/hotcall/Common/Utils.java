@@ -1,4 +1,4 @@
-package com.example.admin.myapplication.Common;
+package com.example.admin.hotcall.Common;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;

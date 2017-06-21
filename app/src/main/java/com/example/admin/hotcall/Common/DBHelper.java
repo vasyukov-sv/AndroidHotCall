@@ -1,4 +1,4 @@
-package com.example.admin.myapplication.Common;
+package com.example.admin.hotcall.Common;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
- * Created by sbt-vasyukov-sv on 20.06.2017 14:50 14:52 14:53 MyApplication7.
+ * Created by sbt-vasyukov-sv on 20.06.2017 14:50 14:52 14:53
  * DBHelper utils
  */
 
