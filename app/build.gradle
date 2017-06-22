@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion '26.0.0'
     defaultConfig {
-        applicationId "com.example.admin.myapplication"
+        applicationId "com.example.admin.hotcall"
         minSdkVersion 11
         //noinspection OldTargetApi
         targetSdkVersion 25

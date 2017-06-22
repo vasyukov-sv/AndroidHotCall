@@ -1,6 +1,5 @@
 package com.example.admin.hotcall;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,33 +17,36 @@ import android.widget.TableRow;
 import android.widget.Toast;
 import com.example.admin.hotcall.common.DBHelper;
 import com.example.admin.hotcall.common.Utils;
+import com.example.admin.hotcall.loader.AsyncResponse;
 import com.example.admin.hotcall.loader.ContactsJob;
+import com.example.admin.hotcall.obj.Contact;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener, OnLongClickListener {
+public class MainActivity extends AppCompatActivity implements OnClickListener, OnLongClickListener, AsyncResponse {
     private DBHelper dbHelper;
+    private SQLiteDatabase db;
     private String logTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbHelper = new DBHelper(this);
+        db = dbHelper.getWritableDatabase();
         logTag = Utils.getApplicationName(this);
         generateView();
     }
 
     private void generateView() {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         Cursor c = db.query(Utils.TABLE, null, null, null, null, null, null);
         if (!c.moveToFirst()) {
             createEmptyLayout();
-            Log.d(logTag, "0 rows, generate view");
+            Log.i(logTag, "0 rows, generate view");
 
 
         } else {
             do {
-                Log.d(logTag,
+                Log.i(logTag,
                         "ID = " + c.getInt(c.getColumnIndex("id")) +
                                 ", name = " + c.getString(c.getColumnIndex("name")) +
                                 ", number = " + c.getString(c.getColumnIndex("number")));
@@ -73,16 +75,17 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
 
     @Override
     public void onClick(View view) {
-        //stub
-        Toast.makeText(getApplicationContext(), String.format(Locale.getDefault(), "%s %d", getString(R.string.app_name), view.getId()), Toast.LENGTH_LONG).show();
         Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
+        pickContactIntent.putExtra("idbutton", view.getId());
         pickContactIntent.setType(Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
         startActivityForResult(pickContactIntent, Utils.PICK_CONTACT_REQUEST);
     }
 
-
-    public void on(View view) {
-        Toast.makeText(getApplicationContext(), String.format(Locale.getDefault(), "%s %d", getString(R.string.app_name), view.getId()), Toast.LENGTH_LONG).show();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Utils.PICK_CONTACT_REQUEST && resultCode == RESULT_OK) {
+            new ContactsJob(data.getData(), getContentResolver(), this).execute(data.getIntExtra("idbutton", 1));
+        }
     }
 
     private Button createEmptyButton(int id) {
@@ -90,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         btn.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f));
         btn.setText(getString(R.string.addcontact));
         btn.setId(id);
-
-
         btn.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0);
         btn.setOnClickListener(this);
         btn.setOnLongClickListener(this);
@@ -104,30 +105,17 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         return true;
     }
 
-    public void functionCall(String number) {
-        //This is the UI thread
-        //You can do whatever you with your number
-        Toast.makeText(this, "This is the number: " + number, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Utils.PICK_CONTACT_REQUEST && resultCode == RESULT_OK) {
-            Uri contactUri = data.getData();
-            ContentResolver contentResolver = getContentResolver();
-            ContactsJob job = new ContactsJob(this,contentResolver, contactUri);
-            job.execute();
-
-
-            // We only need the NUMBER column, because there will be only one row in the result
-//            String[] projection = {Phone.NUMBER};
-//            Cursor cursor = getContentResolver().query(contactUri, projection, null, null, null);
-//            cursor.moveToFirst();
-//            String number = cursor.getString(cursor.getColumnIndex(Phone.NUMBER));
-//            Log.d(logTag, number);
-
-        }
+    public void processContacts(Contact contact) {
+//        dbHelper.insert(db, contact);
+        drawButton(contact);
     }
 
+    private void drawButton(Contact contact) {
+        int idContact = contact.getId();
+        Button btn = (Button) findViewById(idContact);
+        btn.setText(String.format("%s\n%s", contact.getName(), contact.getNumber()));
+    }
 
 }
