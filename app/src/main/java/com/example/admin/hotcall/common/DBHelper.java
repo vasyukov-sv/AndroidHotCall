@@ -1,4 +1,4 @@
-package com.example.admin.hotcall.Common;
+package com.example.admin.hotcall.common;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

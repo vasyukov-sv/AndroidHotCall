@@ -1,4 +1,4 @@
-package com.example.admin.hotcall.Common;
+package com.example.admin.hotcall.common;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
  */
 public class Utils {
     public static final String TABLE = "tContacts";
+    public static final int PICK_CONTACT_REQUEST = 1;
 
     public static String getApplicationName(Context context) {
         ApplicationInfo applicationInfo = context.getApplicationInfo();
