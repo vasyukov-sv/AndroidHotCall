@@ -17,6 +17,23 @@ public class Contact {
         this.number = number;
     }
 
+    public Contact(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contact contact = (Contact) o;
+        return id == contact.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
     public int getIdContact() {
         return idContact;
     }

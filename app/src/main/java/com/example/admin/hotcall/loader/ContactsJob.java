@@ -40,12 +40,16 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
 
     @Override
     protected Contact doInBackground(Integer... params) {
-        Cursor cursor = contentResolver.query(contactUri, PROJECTION, SELECTION, null, null);
-        cursor.moveToFirst();
-        int idcontact = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-        String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-        String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-        cursor.close();
-        return new Contact(params[0], idcontact, name, number);
+        Cursor cursor = contentResolver.query(contactUri, PROJECTION, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int idcontact = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+            String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+            String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            cursor.close();
+            return new Contact(params[0], idcontact, name, number);
+        }
+        return null;
     }
+
+
 }
