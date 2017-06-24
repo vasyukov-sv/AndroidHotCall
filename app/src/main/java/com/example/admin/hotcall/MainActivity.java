@@ -103,12 +103,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         menu.add(0, MENU_UPDATE, 0, "Другой контакт...");
     }
 
-//    @Override
-//    public boolean onLongClick(View view) {
-//        Toast.makeText(getApplicationContext(), String.format(Locale.getDefault(), "%s %d", "Long Click Pressed !!!", view.getId()), Toast.LENGTH_LONG).show();
-//        return true;
-//    }
-
     @Override
     public void processContacts(Contact contact) {
         if (contact == null) {
