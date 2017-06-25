@@ -34,8 +34,8 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void delete(int contactId) {
-        db.delete(Utils.TABLE, "id=" + contactId, null);
+    public void delete(int id) {
+        db.delete(Utils.TABLE, "id=" + id, null);
     }
 
     public void insert(Contact contact) {
@@ -70,5 +70,21 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void setDB(SQLiteDatabase db) {
         this.db = db;
+    }
+
+    public Contact getContact(int id) {
+        Cursor cursor = db.query(Utils.TABLE, null, "id = " + id, null, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        cursor.moveToFirst();
+        Contact contact = new Contact(
+                cursor.getInt(cursor.getColumnIndex("id")),
+                cursor.getInt(cursor.getColumnIndex("idcontact")),
+                cursor.getString(cursor.getColumnIndex("name")),
+                cursor.getString(cursor.getColumnIndex("number"))
+        );
+        cursor.close();
+        return contact;
     }
 }

@@ -1,14 +1,19 @@
 package com.example.admin.hotcall;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -21,9 +26,10 @@ import com.example.admin.hotcall.obj.Contact;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener, AsyncResponse {
+public class MainActivity extends AppCompatActivity implements AsyncResponse {
     private static final int MENU_DELETE = 1;
     private static final int MENU_UPDATE = 2;
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
     private DBHelper dbHelper;
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private String logTag;
@@ -73,12 +79,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         return null;
     }
 
-    @Override
-    public void onClick(View view) {
-        buttonID = view.getId();
-        chooseContact();
-    }
-
     private void chooseContact() {
         Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
         pickContactIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
@@ -111,28 +111,75 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
             Toast.makeText(this, "Такой контакт уже существует", Toast.LENGTH_LONG).show();
         } else {
             dbHelper.insert(contact);
-            drawButton(contact.getId(), contact);
+            drawButton((Button) findViewById(buttonID), contact);
         }
     }
 
     private void drawButton(Button btn, Contact contact) {
+        if (btn == null) {
+            return;
+        }
+
         if (contact != null) {
             btn.setText(String.format("%s\n%s", contact.getName(), contact.getNumber()));
             btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             btn.setOnClickListener(null);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    buttonID = v.getId();
+                    makeCall();
+                }
+            });
             registerForContextMenu(btn);
         } else {
             btn.setText(getString(R.string.addcontact));
             btn.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0);
-            btn.setOnClickListener(this);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    buttonID = v.getId();
+                    chooseContact();
+                }
+            });
             unregisterForContextMenu(btn);
         }
     }
 
-    private void drawButton(int id, Contact contact) {
-        Button btn = (Button) findViewById(id);
-        drawButton(btn, contact);
+    private void makeCall() {
+        Log.i(logTag, "Make call");
+        Contact contact = dbHelper.getContact(buttonID);
+        if (contact == null) {
+            return;
+        }
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + contact.getNumber()));
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
+        } else {
+            try {
+                startActivity(callIntent);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CALL_PHONE:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    makeCall();
+                } else {
+                    Log.d("TAG", "Call Permission Not Granted");
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
     @Override
@@ -140,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         switch (item.getItemId()) {
             case MENU_DELETE:
                 dbHelper.delete(buttonID);
-                drawButton(buttonID, null);
+                drawButton((Button) findViewById(buttonID), null);
                 break;
             case MENU_UPDATE:
                 chooseContact();
