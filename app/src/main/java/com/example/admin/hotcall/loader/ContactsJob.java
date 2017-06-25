@@ -17,9 +17,6 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
             ContactsContract.Contacts.DISPLAY_NAME,
             ContactsContract.CommonDataKinds.Phone.NUMBER
     };
-    private static final String SELECTION = "(" +
-            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + ContactsContract.Contacts._ID + " AND " +
-            ContactsContract.Data.CONTACT_ID + " = " + ContactsContract.Contacts._ID + ")";
 
     private final Uri contactUri;
     private final ContentResolver contentResolver;
@@ -30,7 +27,6 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
         this.contentResolver = contentResolver;
         this.delegate = delegate;
     }
-
 
     @Override
     protected void onPostExecute(Contact contact) {
@@ -50,6 +46,4 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
         }
         return null;
     }
-
-
 }

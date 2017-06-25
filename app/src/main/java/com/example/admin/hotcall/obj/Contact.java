@@ -26,12 +26,15 @@ public class Contact {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contact contact = (Contact) o;
-        return id == contact.id;
+        return idContact == contact.idContact && name.equals(contact.name) && number.equals(contact.number);
     }
 
     @Override
     public int hashCode() {
-        return id;
+        int result = idContact;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + number.hashCode();
+        return result;
     }
 
     public int getIdContact() {

@@ -8,8 +8,9 @@ import android.content.pm.ApplicationInfo;
  * common Utils
  */
 public class Utils {
-    public static final String TABLE = "tContacts";
     public static final int PICK_CONTACT_REQUEST = 1;
+    static final int DATABASE_VERSION = 1;
+    static final String TABLE = "tContacts";
 
     public static String getApplicationName(Context context) {
         ApplicationInfo applicationInfo = context.getApplicationInfo();
