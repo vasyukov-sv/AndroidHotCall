@@ -1,5 +1,7 @@
 package com.example.admin.hotcall.obj;
 
+import android.graphics.drawable.Drawable;
+
 /**
  * Created by sbt-vasyukov-sv on 22.06.2017 14:51 HotCall.
  * Contact POJO
@@ -9,16 +11,13 @@ public class Contact {
     private int idContact;
     private String name;
     private String number;
+    private Drawable photo;
 
     public Contact(int id, int idContact, String name, String number) {
         this.id = id;
         this.idContact = idContact;
         this.name = name;
         this.number = number;
-    }
-
-    public Contact(int id) {
-        this.id = id;
     }
 
     @Override
@@ -41,31 +40,24 @@ public class Contact {
         return idContact;
     }
 
-    public void setIdContact(int idContact) {
-        this.idContact = idContact;
-    }
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public Drawable getPhoto() {
+        return photo;
+    }
+
+    public Contact setPhoto(Drawable photo) {
+        this.photo = photo;
+        return this;
     }
 }

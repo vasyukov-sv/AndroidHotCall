@@ -1,11 +1,18 @@
 package com.example.admin.hotcall.loader;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import com.example.admin.hotcall.obj.Contact;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 /**
  * Created by sbt-vasyukov-sv on 21.06.2017 16:01 HotCall.
@@ -42,7 +49,31 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             cursor.close();
-            return new Contact(params[0], idcontact, name, number);
+            InputStream inputStream = openPhoto(idcontact);
+            Bitmap b = BitmapFactory.decodeStream(inputStream);
+            b.setDensity(Bitmap.DENSITY_NONE);
+            return new Contact(params[0], idcontact, name, number).setPhoto(new BitmapDrawable(b));
+        }
+        return null;
+    }
+
+    private InputStream openPhoto(long contactId) {
+        Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
+        Uri photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+        Cursor cursor =contentResolver.query(photoUri,
+                new String[] {ContactsContract.Contacts.Photo.PHOTO}, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        try {
+            if (cursor.moveToFirst()) {
+                byte[] data = cursor.getBlob(0);
+                if (data != null) {
+                    return new ByteArrayInputStream(data);
+                }
+            }
+        } finally {
+            cursor.close();
         }
         return null;
     }

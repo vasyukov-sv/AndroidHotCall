@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
         if (contact != null) {
             btn.setText(String.format("%s\n%s", contact.getName(), contact.getNumber()));
+            btn.setBackground(contact.getPhoto());
             btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             btn.setOnClickListener(null);
             btn.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             return;
         }
         Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.putExtra("com.android.phone.extra.slot", 0); //For sim 1
         callIntent.setData(Uri.parse("tel:" + contact.getNumber()));
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, MY_PERMISSIONS_REQUEST_CALL_PHONE);
