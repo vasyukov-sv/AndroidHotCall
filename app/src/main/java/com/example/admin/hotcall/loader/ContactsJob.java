@@ -2,6 +2,7 @@ package com.example.admin.hotcall.loader;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,7 @@ import android.provider.ContactsContract;
 import com.example.admin.hotcall.obj.Contact;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -49,7 +51,7 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             cursor.close();
-            InputStream inputStream = openPhoto(idcontact);
+            InputStream inputStream = openDisplayPhoto(idcontact);
             Bitmap b = BitmapFactory.decodeStream(inputStream);
             b.setDensity(Bitmap.DENSITY_NONE);
             return new Contact(params[0], idcontact, name, number).setPhoto(new BitmapDrawable(b));
@@ -77,4 +79,19 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
         }
         return null;
     }
+
+    public InputStream openDisplayPhoto(long contactId) {
+        Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
+        Uri displayPhotoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);
+        try {
+            AssetFileDescriptor fd =
+                    contentResolver.openAssetFileDescriptor(displayPhotoUri, "r");
+            return fd.createInputStream();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+
 }
