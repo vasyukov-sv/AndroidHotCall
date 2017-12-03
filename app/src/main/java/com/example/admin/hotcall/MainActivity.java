@@ -3,6 +3,7 @@ package com.example.admin.hotcall;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -123,16 +124,14 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
         if (contact != null) {
             btn.setText(String.format("%s\n%s", contact.getName(), contact.getNumber()));
-            Drawable top = contact.getPhoto();
+            Drawable top = new BitmapDrawable(contact.getPhoto());
             int width  = btn.getMeasuredWidth();
             int height = btn.getMeasuredHeight();
             Log.i(logTag, String.valueOf(width));
             Log.i(logTag, String.valueOf(height));
 
-            if (top!=null) {
-                top.setBounds(0, 0, 300, 300);
-                btn.setCompoundDrawables(null, top, null, null);
-            }
+            top.setBounds(0, 0, 300, 300);
+            btn.setCompoundDrawables(null, top, null, null);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

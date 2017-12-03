@@ -2,17 +2,14 @@ package com.example.admin.hotcall.loader;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import com.example.admin.hotcall.obj.Contact;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -21,11 +18,7 @@ import java.io.InputStream;
  * ContactsJob
  */
 public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
-    private static final String[] PROJECTION = new String[]{
-            ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.DISPLAY_NAME,
-            ContactsContract.CommonDataKinds.Phone.NUMBER
-    };
+    private static final String[] PROJECTION = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
 
     private final Uri contactUri;
     private final ContentResolver contentResolver;
@@ -52,46 +45,29 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
             String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             cursor.close();
             InputStream inputStream = openDisplayPhoto(idcontact);
-            Bitmap b = BitmapFactory.decodeStream(inputStream);
-            b.setDensity(Bitmap.DENSITY_NONE);
-            return new Contact(params[0], idcontact, name, number).setPhoto(new BitmapDrawable(b));
+
+
+            Bitmap photo = BitmapFactory.decodeStream(inputStream);
+//            ImageView imageView = (ImageView) findViewById(R.id.img_contact);
+//            imageView.setImageBitmap(photo);
+
+
+
+
+            return new Contact(params[0], idcontact, name, number).setPhoto(photo);
         }
         return null;
     }
 
-    private InputStream openPhoto(long contactId) {
-        Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
-        Uri photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
-        Cursor cursor =contentResolver.query(photoUri,
-                new String[] {ContactsContract.Contacts.Photo.PHOTO}, null, null, null);
-        if (cursor == null) {
-            return null;
-        }
-        try {
-            if (cursor.moveToFirst()) {
-                byte[] data = cursor.getBlob(0);
-                if (data != null) {
-                    return new ByteArrayInputStream(data);
-                }
-            }
-        } finally {
-            cursor.close();
-        }
-        return null;
-    }
 
-    public InputStream openDisplayPhoto(long contactId) {
-        Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
-        Uri displayPhotoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);
+    private InputStream openDisplayPhoto(long contactId) {
+        InputStream inputStream = null;
         try {
-            AssetFileDescriptor fd =
-                    contentResolver.openAssetFileDescriptor(displayPhotoUri, "r");
-            return fd.createInputStream();
+            inputStream = ContactsContract.Contacts.openContactPhotoInputStream(contentResolver, ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId));
+            inputStream.close();
         } catch (IOException e) {
-            return null;
+            e.printStackTrace();
         }
+        return inputStream;
     }
-
-
-
 }

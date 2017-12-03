@@ -1,6 +1,6 @@
 package com.example.admin.hotcall.obj;
 
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 
 /**
  * Created by sbt-vasyukov-sv on 22.06.2017 14:51 HotCall.
@@ -11,7 +11,7 @@ public class Contact {
     private int idContact;
     private String name;
     private String number;
-    private Drawable photo;
+    private Bitmap photo;
 
     public Contact(int id, int idContact, String name, String number) {
         this.id = id;
@@ -52,11 +52,11 @@ public class Contact {
         return number;
     }
 
-    public Drawable getPhoto() {
+    public Bitmap getPhoto() {
         return photo;
     }
 
-    public Contact setPhoto(Drawable photo) {
+    public Contact setPhoto(Bitmap photo) {
         this.photo = photo;
         return this;
     }
