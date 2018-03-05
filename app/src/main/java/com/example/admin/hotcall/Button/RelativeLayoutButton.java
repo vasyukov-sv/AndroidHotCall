@@ -5,20 +5,18 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 
-public class RelativeLayoutButton extends RelativeLayout {
+public class TableLayoutButton extends TableLayout {
 
-    public RelativeLayoutButton(Context context, int id)
+    public TableLayout(Context context, int id)
     {
         super(context);
 
         // if our context is not Activity we can't get View supplied by id
-        if (!(context instanceof Activity))
+        if (!(context instanceof Activity)) {
             return;
+        }
 
 
         // find relative layout by id

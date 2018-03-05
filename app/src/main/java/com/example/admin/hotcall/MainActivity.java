@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     private static final int MENU_UPDATE = 2;
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
     private DBHelper dbHelper;
-    @SuppressWarnings({"FieldCanBeLocal", "unused"})
+
     private String logTag;
     private int buttonID;
 
