@@ -54,7 +54,8 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
 
 
 
-            return new Contact(params[0], idcontact, name, number).setPhoto(photo);
+            return new Contact(params[0], idcontact, name, number);
+//                    .setPhoto(photo);
         }
         return null;
     }

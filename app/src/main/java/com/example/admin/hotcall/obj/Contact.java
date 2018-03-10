@@ -1,17 +1,15 @@
 package com.example.admin.hotcall.obj;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by sbt-vasyukov-sv on 22.06.2017 14:51 HotCall.
  * Contact POJO
  */
 public class Contact {
-    private int id;
-    private int idContact;
-    private String name;
-    private String number;
-    private Bitmap photo;
+    private final int id;
+    private final int idContact;
+    private final String name;
+    private final String number;
+//    private Bitmap photo;
 
     public Contact(int id, int idContact, String name, String number) {
         this.id = id;
@@ -52,12 +50,12 @@ public class Contact {
         return number;
     }
 
-    public Bitmap getPhoto() {
-        return photo;
-    }
-
-    public Contact setPhoto(Bitmap photo) {
-        this.photo = photo;
-        return this;
-    }
+//    public Bitmap getPhoto() {
+//        return photo;
+//    }
+//
+//    public Contact setPhoto(Bitmap photo) {
+//        this.photo = photo;
+//        return this;
+//    }
 }
