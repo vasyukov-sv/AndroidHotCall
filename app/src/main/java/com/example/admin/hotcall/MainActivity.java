@@ -24,14 +24,17 @@ import com.example.admin.hotcall.loader.AsyncResponse;
 import com.example.admin.hotcall.loader.ContactsJob;
 import com.example.admin.hotcall.obj.Contact;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse {
     private static final int MENU_DELETE = 1;
     private static final int MENU_UPDATE = 2;
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
-    private DBHelper dbHelper;
+    private Set<RelativeLayoutButton> buttons = new LinkedHashSet<>();
 
+    private DBHelper dbHelper;
     private String logTag;
     private int buttonID;
 
@@ -42,6 +45,32 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         dbHelper.setDB(dbHelper.getWritableDatabase());
         logTag = Utils.getApplicationName(this);
         setContentView(R.layout.main);
+
+        List<Contact> contacts = dbHelper.selectAll();
+        buttons.add(new RelativeLayoutButton(this, R.id.button1));
+        buttons.add(new RelativeLayoutButton(this, R.id.button2));
+        buttons.add(new RelativeLayoutButton(this, R.id.button3));
+        buttons.add(new RelativeLayoutButton(this, R.id.button4));
+
+//        dbHelper.selectAll().stream()
+
+//        button1.setText(R.id.button_text, String.format("%s\n%s", contacts.get(0).getName(), contacts.get(0).getNumber()));
+//
+//
+//        for (int i = 0; i < 4; i++) {
+//
+//
+//            RelativeLayoutButton button = new RelativeLayoutButton(this, R.id.button + i);
+//
+//
+//            button.setText(btn.getId(), String.format("%s\n%s", contacts.getName(), contact.getNumber()));
+//            if (contact.getId() == id) {
+//                return contact;
+//            }
+//        }
+//        return null;
+//
+//        drawButton(btn, findContact(id, contacts));
 //        generateView();
     }
 
@@ -123,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         }
 
         if (contact != null) {
-            btn.setText(btn.getId(),String.format("%s\n%s", contact.getName(), contact.getNumber()));
+            btn.setText(btn.getId(), String.format("%s\n%s", contact.getName(), contact.getNumber()));
 //            Drawable top = new BitmapDrawable(contact.getPhoto());
             int width = btn.getMeasuredWidth();
             int height = btn.getMeasuredHeight();
@@ -141,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             });
             registerForContextMenu(btn);
         } else {
-            btn.setText(btn.getId(),getString(R.string.addcontact));
+            btn.setText(btn.getId(), getString(R.string.addcontact));
 //            btn.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
