@@ -14,10 +14,10 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
+import com.example.admin.hotcall.Button.RelativeLayoutButton;
 import com.example.admin.hotcall.common.DBHelper;
 import com.example.admin.hotcall.common.Utils;
 import com.example.admin.hotcall.loader.AsyncResponse;
@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         dbHelper = new DBHelper(this);
         dbHelper.setDB(dbHelper.getWritableDatabase());
         logTag = Utils.getApplicationName(this);
-        generateView();
+        setContentView(R.layout.main);
+//        generateView();
     }
 
     private void generateView() {
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         tl.addView(createTableRow(createButton(3, Contacts), createButton(4, Contacts)));
     }
 
-    private View createTableRow(Button btn1, Button btn2) {
+    private View createTableRow(RelativeLayoutButton btn1, RelativeLayoutButton btn2) {
         TableRow tr = new TableRow(this);
         tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT, 1.0f));
         tr.addView(btn1);
@@ -61,10 +62,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         return tr;
     }
 
-    private Button createButton(int id, List<Contact> contacts) {
-        Button btn = new Button(this);
+    private RelativeLayoutButton createButton(int id, List<Contact> contacts) {
+        RelativeLayoutButton btn = new RelativeLayoutButton(this, id);
+//        Button btn = new Button(this);
         btn.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f));
-        btn.setTransformationMethod(null);
+
         btn.setId(id);
         drawButton(btn, findContact(id, contacts));
         return btn;
@@ -111,17 +113,17 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             Toast.makeText(this, "Такой контакт уже существует", Toast.LENGTH_LONG).show();
         } else {
             dbHelper.insert(contact);
-            drawButton((Button) findViewById(buttonID), contact);
+            drawButton((RelativeLayoutButton) findViewById(buttonID), contact);
         }
     }
 
-    private void drawButton(Button btn, Contact contact) {
+    private void drawButton(RelativeLayoutButton btn, Contact contact) {
         if (btn == null) {
             return;
         }
 
         if (contact != null) {
-            btn.setText(String.format("%s\n%s", contact.getName(), contact.getNumber()));
+            btn.setText(btn.getId(),String.format("%s\n%s", contact.getName(), contact.getNumber()));
 //            Drawable top = new BitmapDrawable(contact.getPhoto());
             int width = btn.getMeasuredWidth();
             int height = btn.getMeasuredHeight();
@@ -139,8 +141,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             });
             registerForContextMenu(btn);
         } else {
-            btn.setText(getString(R.string.addcontact));
-            btn.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0);
+            btn.setText(btn.getId(),getString(R.string.addcontact));
+//            btn.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_add, 0, 0, 0);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -194,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         switch (item.getItemId()) {
             case MENU_DELETE:
                 dbHelper.delete(buttonID);
-                drawButton((Button) findViewById(buttonID), null);
+                drawButton((RelativeLayoutButton) findViewById(buttonID), null);
                 break;
             case MENU_UPDATE:
                 chooseContact();

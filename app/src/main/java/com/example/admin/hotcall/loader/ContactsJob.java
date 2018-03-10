@@ -1,17 +1,11 @@
 package com.example.admin.hotcall.loader;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import com.example.admin.hotcall.obj.Contact;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by sbt-vasyukov-sv on 21.06.2017 16:01 HotCall.
@@ -44,10 +38,10 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             cursor.close();
-            InputStream inputStream = openDisplayPhoto(idcontact);
+//            InputStream inputStream = openDisplayPhoto(idcontact);
 
 
-            Bitmap photo = BitmapFactory.decodeStream(inputStream);
+//            Bitmap photo = BitmapFactory.decodeStream(inputStream);
 //            ImageView imageView = (ImageView) findViewById(R.id.img_contact);
 //            imageView.setImageBitmap(photo);
 
@@ -61,14 +55,14 @@ public class ContactsJob extends AsyncTask<Integer, Void, Contact> {
     }
 
 
-    private InputStream openDisplayPhoto(long contactId) {
-        InputStream inputStream = null;
-        try {
-            inputStream = ContactsContract.Contacts.openContactPhotoInputStream(contentResolver, ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId));
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return inputStream;
-    }
+//    private InputStream openDisplayPhoto(long contactId) {
+//        InputStream inputStream = null;
+//        try {
+//            inputStream = ContactsContract.Contacts.openContactPhotoInputStream(contentResolver, ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId));
+//            inputStream.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return inputStream;
+//    }
 }

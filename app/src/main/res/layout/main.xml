@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:padding="10dp"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent">
+
+    <TableRow android:layout_weight="1">
+        <include android:id="@+id/button1"
+                 layout="@layout/mybutton"
+                 android:layout_weight="1"
+                 android:layout_height="match_parent"
+                 android:layout_width="match_parent"/>
+
+        <include android:id="@+id/button2"
+                 layout="@layout/mybutton"
+                 android:layout_weight="1"
+                 android:layout_height="match_parent"
+                 android:layout_width="match_parent"/>
+    </TableRow>
+
+    <TableRow android:layout_weight="1">
+        <include android:id="@+id/button3"
+                 layout="@layout/mybutton"
+                 android:layout_weight="1"
+                 android:layout_height="match_parent"
+                 android:layout_width="match_parent"/>
+
+        <include android:id="@+id/button4"
+                 layout="@layout/mybutton"
+                 android:layout_weight="1"
+                 android:layout_height="match_parent"
+                 android:layout_width="match_parent"/>
+    </TableRow>
+
+
+</TableLayout>
