@@ -1,0 +1,63 @@
+package com.example.admin.hotcall.obj;
+
+import android.graphics.drawable.BitmapDrawable;
+import android.view.View;
+import com.example.admin.hotcall.Button.RelativeLayoutButton;
+import com.example.admin.hotcall.R;
+
+public class ButtonMapper {
+    public static MyIntent myIntent;
+    private final RelativeLayoutButton relativeLayoutButton;
+    private Contact contact;
+    private int id;
+
+    public ButtonMapper(int id, RelativeLayoutButton relativeLayoutButton, Contact contact) {
+        this.relativeLayoutButton = relativeLayoutButton;
+        this.contact = contact;
+        setButtonContext();
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    private void setButtonContext() {
+        if (contact != null) {
+            relativeLayoutButton.setText(R.id.button_text, String.format("%s\n%s", contact.getName(), contact.getNumber()));
+            relativeLayoutButton.setOnClickListener(getListener(contact.getNumber()));
+            relativeLayoutButton.setImageDrawable(R.id.button_image, new BitmapDrawable(myIntent.getContext().getResources(), contact.getPhoto()));
+            myIntent.registerForContextMenu(relativeLayoutButton);
+        } else {
+            relativeLayoutButton.setText(R.id.button_text, myIntent.getContext().getString(R.string.addcontact));
+            relativeLayoutButton.setOnClickListener(getChooseListener());
+            relativeLayoutButton.setImageResource(R.id.button_image, android.R.drawable.ic_input_add);
+            myIntent.unregisterForContextMenu(relativeLayoutButton);
+        }
+    }
+
+    public RelativeLayoutButton getRelativeLayoutButton() {
+        return relativeLayoutButton;
+    }
+
+    private View.OnClickListener getListener(final String number) {
+        return v -> myIntent.makeCall(number);
+    }
+
+    private View.OnClickListener getChooseListener() {
+        return v -> myIntent.chooseContact(v);
+    }
+
+    public void update(Contact contact) {
+        setContact(contact);
+        setButtonContext();
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    private void setContact(Contact contact) {
+        this.contact = contact;
+    }
+}

@@ -1,5 +1,6 @@
 package com.example.admin.hotcall.Button;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+@SuppressLint("ViewConstructor")
 public class RelativeLayoutButton extends RelativeLayout {
 
     public RelativeLayoutButton(Context context, int id) {
@@ -80,12 +82,10 @@ public class RelativeLayoutButton extends RelativeLayout {
         if (null != v && v instanceof TextView) {
             ((TextView) v).setText(text);
         }
-
     }
 
     // method for setting drawable for the images
     public void setImageDrawable(int id, Drawable drawable) {
-
         View v = findViewById(id);
         if (null != v && v instanceof ImageView) {
             ((ImageView) v).setImageDrawable(drawable);
@@ -93,15 +93,13 @@ public class RelativeLayoutButton extends RelativeLayout {
 
     }
 
+
     // method for setting images by resource id
     public void setImageResource(int id, int image_resource_id) {
-
         View v = findViewById(id);
         if (null != v && v instanceof ImageView) {
             ((ImageView) v).setImageResource(image_resource_id);
         }
-
     }
 
 }
-
