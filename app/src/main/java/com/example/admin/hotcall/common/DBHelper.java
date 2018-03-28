@@ -5,8 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import com.example.admin.hotcall.obj.Contact;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + Utils.TABLE + "(id integer primary key,idcontact integer, name text,number text);");
+        db.execSQL("CREATE TABLE " + Utils.TABLE + "(id integer primary key,idcontact integer, name text,number text, photo blob);");
     }
 
     @Override
@@ -56,21 +59,31 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void insert(Contact contact) {
         delete(contact.getId());
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Bitmap bitmap = contact.getPhoto();
+        if (bitmap != null) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        }
+
         ContentValues cv = new ContentValues();
         cv.put("id", contact.getId());
         cv.put("idcontact", contact.getIdContact());
         cv.put("name", contact.getName());
         cv.put("number", contact.getNumber());
+        cv.put("photo", stream.toByteArray());
         db.insert(Utils.TABLE, null, cv);
     }
 
     public List<Contact> selectAll() {
         List<Contact> contacts = new ArrayList<>();
+        byte[] bitmapdata;
         Cursor cursor = db.query(Utils.TABLE, null, null, null, null, null, "id");
         if (cursor != null) {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")));
+                bitmapdata = cursor.getBlob(cursor.getColumnIndex("photo"));
+                Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")), BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length));
                 contacts.add(contact);
                 cursor.moveToNext();
             }
@@ -90,7 +103,8 @@ public class DBHelper extends SQLiteOpenHelper {
             return null;
         }
         cursor.moveToFirst();
-        Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")));
+        byte[] bitmapdata = cursor.getBlob(cursor.getColumnIndex("photo"));
+        Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")), BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length));
         cursor.close();
         return contact;
     }

@@ -9,13 +9,13 @@ public class Contact {
     private final String number;
     private Bitmap photo;
 
-    public Contact(int id, int idContact, String name, String number) {
+    public Contact(int id, int idContact, String name, String number, Bitmap photo) {
         this.id = id;
         this.idContact = idContact;
         this.name = name;
         this.number = number;
+        this.photo = photo;
     }
-
 
     public int getIdContact() {
         return idContact;
@@ -35,11 +35,6 @@ public class Contact {
 
     public Bitmap getPhoto() {
         return photo;
-    }
-
-    public Contact setPhoto(Bitmap photo) {
-        this.photo = photo;
-        return this;
     }
 
     @Override

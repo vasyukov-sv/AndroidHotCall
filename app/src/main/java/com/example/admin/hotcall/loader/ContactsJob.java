@@ -22,7 +22,7 @@ import static android.content.ContentValues.TAG;
  * ContactsJob
  */
 public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
-    private static final String[] PROJECTION = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
+//    private static final String[] PROJECTION = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
 
     private final Uri contactUri;
     private final ContentResolver contentResolver;
@@ -68,7 +68,7 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
 
 //            buttonMappers[0].setContact(new Contact(buttonMappers[0].getId(), idcontact, name, number));
 
-        return new Contact(buttonMappers[0].getId(), Integer.valueOf(contactID), name, number).setPhoto(photo);
+        return new Contact(buttonMappers[0].getId(), Integer.valueOf(contactID), name, number, photo);
     }
 
     private Bitmap retrieveContactPhoto() {

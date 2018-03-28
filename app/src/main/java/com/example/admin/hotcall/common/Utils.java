@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Utils {
     public static final int PICK_CONTACT_REQUEST = 1;
-    static final int DATABASE_VERSION = 2;
+    static final int DATABASE_VERSION = 3;
     static final String TABLE = "tContacts";
 
     public static <T> T getItemByIndex(List<T> list, int index) {
