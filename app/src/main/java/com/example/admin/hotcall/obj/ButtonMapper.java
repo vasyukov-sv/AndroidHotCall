@@ -5,6 +5,8 @@ import android.view.View;
 import com.example.admin.hotcall.Button.RelativeLayoutButton;
 import com.example.admin.hotcall.R;
 
+import static com.example.admin.hotcall.common.Utils.getHumanPhone;
+
 public class ButtonMapper {
     public static MyIntent myIntent;
     private final RelativeLayoutButton relativeLayoutButton;
@@ -24,8 +26,8 @@ public class ButtonMapper {
 
     private void setButtonContext() {
         if (contact != null) {
-            relativeLayoutButton.setText(R.id.button_text, String.format("%s\n%s", contact.getName(), contact.getNumber()));
-            relativeLayoutButton.setOnClickListener(getListener(contact.getNumber()));
+            relativeLayoutButton.setText(R.id.button_text, String.format("%s\n%s", contact.getName(), getHumanPhone(contact.getNumber())));
+            relativeLayoutButton.setOnClickListener(getListener());
             relativeLayoutButton.setImageDrawable(R.id.button_image, new BitmapDrawable(myIntent.getContext().getResources(), contact.getPhoto()));
             myIntent.registerForContextMenu(relativeLayoutButton);
         } else {
@@ -40,8 +42,8 @@ public class ButtonMapper {
         return relativeLayoutButton;
     }
 
-    private View.OnClickListener getListener(final String number) {
-        return v -> myIntent.makeCall(number);
+    private View.OnClickListener getListener() {
+        return v -> myIntent.makeCall(v);
     }
 
     private View.OnClickListener getChooseListener() {

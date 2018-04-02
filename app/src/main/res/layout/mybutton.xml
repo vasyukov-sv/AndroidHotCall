@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="match_parent" android:layout_width="match_parent">
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="@android:color/black"
+
+>
 
     <ImageView android:id="@+id/button_image"
                android:layout_width="match_parent"
-               android:src="@android:drawable/ic_menu_add"
                android:layout_height="wrap_content"
                android:layout_centerVertical="true"
-               android:contentDescription="@string/contact_photo"/>
+               android:contentDescription="@string/contact_photo"
+               android:background="@android:color/holo_blue_light"
+    />
 
     <TextView android:id="@+id/button_text"
               android:layout_width="match_parent"
-              android:textSize="20sp"
+              android:textSize="15sp"
               android:layout_below="@id/button_image"
               android:textAlignment="center"
-              android:text="@string/addcontact" android:layout_height="wrap_content"/>
+              android:text="@string/addcontact"
+              android:layout_height="wrap_content"
+              android:background="@android:color/holo_green_dark"
+    />
 </RelativeLayout>
 

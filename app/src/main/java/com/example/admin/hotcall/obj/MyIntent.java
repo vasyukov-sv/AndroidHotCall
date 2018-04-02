@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 public interface MyIntent {
-    void makeCall(final String number);
+    void makeCall(View v);
 
     void chooseContact(View view);
 

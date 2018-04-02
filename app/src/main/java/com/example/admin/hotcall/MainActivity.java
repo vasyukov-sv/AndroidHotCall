@@ -3,9 +3,11 @@ package com.example.admin.hotcall;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
@@ -24,6 +26,7 @@ import com.example.admin.hotcall.obj.MyIntent;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.admin.hotcall.common.Utils.PERMISSION_REQUEST_CALL;
 import static com.example.admin.hotcall.common.Utils.getItemByIndex;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse, MyIntent {
@@ -92,7 +95,16 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
     }
 
     @Override
-    public void makeCall(final String number) {
+    public void makeCall(View v) {
+        currButtonMapper = findButtonById(v.getId());
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            startCallIntent(currButtonMapper.getContact().getNumber());
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, PERMISSION_REQUEST_CALL);
+        }
+    }
+
+    private void startCallIntent(final String number) {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.putExtra("com.android.phone.extra.slot", 0); //For sim 1
         callIntent.setData(Uri.parse("tel:" + number));
@@ -131,20 +143,16 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
     }
 
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//
-//        if (requestCode == PERMISSION_REQUEST_CAMERA) {
-//            // Request for camera permission.
-//            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                // Permission has been granted. Start camera preview Activity.
-//                Snackbar.make(mLayout, R.string.camera_permission_granted, Snackbar.LENGTH_SHORT).show();
-//                startCamera();
-//            } else {
-//                // Permission request was denied.
-//                Snackbar.make(mLayout, R.string.camera_permission_denied, Snackbar.LENGTH_SHORT).show();
-//            }
-//        }
-//
-//    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CALL:
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startCallIntent(currButtonMapper.getContact().getNumber());
+                } else {
+                    Toast.makeText(this, "Permission request was denied", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
 }
