@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.util.Log;
 import com.example.admin.hotcall.obj.ButtonMapper;
+import com.example.admin.hotcall.obj.CallDuration;
 import com.example.admin.hotcall.obj.Contact;
 
 import java.io.IOException;
@@ -17,10 +18,7 @@ import java.io.InputStream;
 
 import static android.content.ContentValues.TAG;
 
-/**
- * Created by sbt-vasyukov-sv on 21.06.2017 16:01 HotCall.
- * ContactsJob
- */
+
 public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
 //    private static final String[] PROJECTION = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
 
@@ -58,6 +56,8 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
 
 
         Bitmap photo = retrieveContactPhoto();
+        CallDuration duration = retrieveCallDuration(number);
+
 //            InputStream inputStream = openDisplayPhoto(idcontact);
 
 
@@ -71,6 +71,10 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
         return new Contact(buttonMappers[0].getId(), Integer.valueOf(contactID), name, number, photo);
     }
 
+    private CallDuration retrieveCallDuration(String number) {
+        return new CallDuration(456, 555, 666, 555);
+    }
+
     private Bitmap retrieveContactPhoto() {
         Bitmap photo = null;
         try {
@@ -79,8 +83,7 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
 
             if (inputStream != null) {
                 photo = BitmapFactory.decodeStream(inputStream);
-//                ImageView imageView = (ImageView) findViewById(R.id.img_contact);
-//                imageView.setImageBitmap(photo);
+
                 inputStream.close();
             }
 

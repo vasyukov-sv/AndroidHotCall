@@ -38,7 +38,9 @@ public class RelativeLayoutButton extends RelativeLayout {
         // to get standard button background and to get button text color
 
         Button bt = new Button(context);
+        bt.getBackground().setAlpha(64);
         this.setBackground(bt.getBackground());
+
 
         // copy all child from relative layout to this button
         while (layout.getChildCount() > 0) {
@@ -90,7 +92,6 @@ public class RelativeLayoutButton extends RelativeLayout {
         if (null != v && v instanceof ImageView) {
             ((ImageView) v).setImageDrawable(drawable);
         }
-
     }
 
 
