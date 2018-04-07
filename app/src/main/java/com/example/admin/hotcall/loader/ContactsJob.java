@@ -68,11 +68,12 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
 
 //            buttonMappers[0].setContact(new Contact(buttonMappers[0].getId(), idcontact, name, number));
 
-        return new Contact(buttonMappers[0].getId(), Integer.valueOf(contactID), name, number, photo);
+        return new Contact(buttonMappers[0].getId(), Integer.valueOf(contactID), name, number, photo, duration);
     }
 
+//    4:20
     private CallDuration retrieveCallDuration(String number) {
-        return new CallDuration(456, 555, 666, 555);
+        return new CallDuration(456, 15640, 666, 555);
     }
 
     private Bitmap retrieveContactPhoto() {

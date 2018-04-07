@@ -8,13 +8,15 @@ public class Contact {
     private final String name;
     private final String number;
     private Bitmap photo;
+    private CallDuration duration;
 
-    public Contact(int id, int idContact, String name, String number, Bitmap photo) {
+    public Contact(int id, int idContact, String name, String number, Bitmap photo, CallDuration duration) {
         this.id = id;
         this.idContact = idContact;
         this.name = name;
         this.number = number;
         this.photo = photo;
+        this.duration = duration;
     }
 
     public int getIdContact() {
@@ -51,5 +53,14 @@ public class Contact {
         result = 31 * result + name.hashCode();
         result = 31 * result + number.hashCode();
         return result;
+    }
+
+    public CallDuration getDuration() {
+        return duration;
+    }
+
+    public Contact setDuration(CallDuration duration) {
+        this.duration = duration;
+        return this;
     }
 }

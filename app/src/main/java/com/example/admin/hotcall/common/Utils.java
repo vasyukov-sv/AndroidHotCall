@@ -17,8 +17,7 @@ public class Utils {
     }
 
     public static String getHumanPhone(String phone) {
-        return phone.replaceAll("\\+|-|\\s", "")
-                .replaceFirst("(\\d)(\\d{3})(\\d{3})(\\d+)", "$1 ($2) $3-$4");
+        return phone == null ? "" : phone.replaceAll("\\+|-|\\s", "").replaceFirst("(\\d)(\\d{3})(\\d{3})(\\d+)", "$1 ($2) $3-$4");
     }
 
     static String getApplicationName(Context context) {

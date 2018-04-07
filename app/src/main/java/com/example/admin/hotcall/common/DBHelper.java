@@ -83,7 +83,7 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 bitmapdata = cursor.getBlob(cursor.getColumnIndex("photo"));
-                Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")), BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length));
+                Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")), BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length), null);
                 contacts.add(contact);
                 cursor.moveToNext();
             }
@@ -104,7 +104,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.moveToFirst();
         byte[] bitmapdata = cursor.getBlob(cursor.getColumnIndex("photo"));
-        Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")), BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length));
+        Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")), BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length), null);
         cursor.close();
         return contact;
     }

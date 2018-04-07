@@ -27,11 +27,15 @@ public class ButtonMapper {
     private void setButtonContext() {
         if (contact != null) {
             relativeLayoutButton.setText(R.id.button_text, String.format("%s\n%s", contact.getName(), getHumanPhone(contact.getNumber())));
+            if (contact.getDuration() != null) {
+                relativeLayoutButton.setText(R.id.button_info, String.format("%s\n%s", contact.getDuration().getIncomingCall(), contact.getDuration().getOutgoingCall()));
+            }
             relativeLayoutButton.setOnClickListener(getListener());
             relativeLayoutButton.setImageDrawable(R.id.button_image, new BitmapDrawable(myIntent.getContext().getResources(), contact.getPhoto()));
             myIntent.registerForContextMenu(relativeLayoutButton);
         } else {
             relativeLayoutButton.setText(R.id.button_text, myIntent.getContext().getString(R.string.addcontact));
+            relativeLayoutButton.setText(R.id.button_info, "");
             relativeLayoutButton.setOnClickListener(getChooseListener());
             relativeLayoutButton.setImageResource(R.id.button_image, android.R.drawable.ic_input_add);
             myIntent.unregisterForContextMenu(relativeLayoutButton);

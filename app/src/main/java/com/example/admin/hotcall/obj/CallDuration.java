@@ -51,15 +51,15 @@ public class CallDuration {
         return this;
     }
 
-    public String getOutgoingCall() {
-        return getHMString(getMonthOutgoingCall(), getAllTimeOutgoingCall());
+    String getOutgoingCall() {
+        return "Исх." + getHMString(getMonthOutgoingCall(), getAllTimeOutgoingCall());
     }
 
-    public String getIncomingCall() {
-        return getHMString(getMonthIncomingCall(), getAllTimeIncomingCall());
+    String getIncomingCall() {
+        return "Вх." + getHMString(getMonthIncomingCall(), getAllTimeIncomingCall());
     }
 
     private String getHMString(int durationMonth, int durationAlltime) {
-        return String.format(Locale.getDefault(), "%dh, %d/ %dh, %d", durationMonth / 3600, durationMonth / 60, durationAlltime / 3600, durationAlltime / 60);
+        return String.format(Locale.getDefault(), "%d:%02d/ %d:%02d", durationMonth / 3600, durationMonth % 3600 / 60, durationAlltime / 3600, durationAlltime % 3600 / 60);
     }
 }
