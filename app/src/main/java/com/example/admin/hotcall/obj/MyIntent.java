@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 public interface MyIntent {
+
     void makeCall(View v);
 
     void chooseContact(View view);
@@ -13,4 +14,5 @@ public interface MyIntent {
     void unregisterForContextMenu(View view);
 
     Context getContext();
+
 }

@@ -7,15 +7,27 @@ public class CallDuration {
     private int allTimeIncomingCall;
     private int monthOutgoingCall;
     private int allTimeOutgoingCall;
+    private long lastSuccess;
 
-    public CallDuration(int monthIncomingCall, int allTimeIncomingCall, int monthOutgoingCall, int allTimeOutgoingCall) {
+    public CallDuration(int monthIncomingCall, int allTimeIncomingCall, int monthOutgoingCall, int allTimeOutgoingCall, long lastSuccess) {
         this.monthIncomingCall = monthIncomingCall;
         this.allTimeIncomingCall = allTimeIncomingCall;
         this.monthOutgoingCall = monthOutgoingCall;
         this.allTimeOutgoingCall = allTimeOutgoingCall;
+        this.lastSuccess = lastSuccess;
+
     }
 
-    private int getMonthIncomingCall() {
+    public long getLastSuccess() {
+        return lastSuccess;
+    }
+
+    public CallDuration setLastSuccess(long lastSuccess) {
+        this.lastSuccess = lastSuccess;
+        return this;
+    }
+
+    public int getMonthIncomingCall() {
         return monthIncomingCall;
     }
 
@@ -24,7 +36,7 @@ public class CallDuration {
         return this;
     }
 
-    private int getAllTimeIncomingCall() {
+    public int getAllTimeIncomingCall() {
         return allTimeIncomingCall;
     }
 
@@ -33,7 +45,7 @@ public class CallDuration {
         return this;
     }
 
-    private int getMonthOutgoingCall() {
+    public int getMonthOutgoingCall() {
         return monthOutgoingCall;
     }
 
@@ -42,7 +54,7 @@ public class CallDuration {
         return this;
     }
 
-    private int getAllTimeOutgoingCall() {
+    public int getAllTimeOutgoingCall() {
         return allTimeOutgoingCall;
     }
 

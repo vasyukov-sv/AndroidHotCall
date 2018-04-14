@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
 import com.example.admin.hotcall.obj.ButtonMapper;
@@ -71,9 +72,30 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
         return new Contact(buttonMappers[0].getId(), Integer.valueOf(contactID), name, number, photo, duration);
     }
 
-//    4:20
     private CallDuration retrieveCallDuration(String number) {
-        return new CallDuration(456, 15640, 666, 555);
+
+        String[] projection = new String[] {
+                CallLog.Calls.CACHED_NAME,
+                CallLog.Calls.NUMBER,
+                CallLog.Calls.TYPE,
+                CallLog.Calls.DATE
+        };
+
+
+        Cursor cursor =  contentResolver.query(CallLog.Calls.CONTENT_URI, projection, null, null, null);
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(0);
+            String phonenumber = cursor.getString(1);
+            String type = cursor.getString(2); // https://developer.android.com/reference/android/provider/CallLog.Calls.html#TYPE
+            String time = cursor.getString(3); // epoch time - https://developer.android.com/reference/java/text/DateFormat.html#parse(java.lang.String
+
+            Log.i(TAG, "retrieveCallDuration: "+phonenumber);
+            Log.i(TAG, "retrieveCallDuration: "+type);
+            Log.i(TAG, "retrieveCallDuration: "+time);
+        }
+        cursor.close();
+
+        return new CallDuration(456, 15640, 666, 555,2);
     }
 
     private Bitmap retrieveContactPhoto() {

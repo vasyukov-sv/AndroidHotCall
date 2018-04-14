@@ -4,10 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -28,14 +26,14 @@ import com.example.admin.hotcall.obj.MyIntent;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.admin.hotcall.common.Utils.PERMISSION_REQUEST_CALL;
-import static com.example.admin.hotcall.common.Utils.getItemByIndex;
+import static com.example.admin.hotcall.common.Utils.*;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse, MyIntent {
     private static final int MENU_DELETE = 1;
     private static final int MENU_UPDATE = 2;
 
     private final List<ButtonMapper> buttons = new ArrayList<>();
+//    private RButton4 buttons;
     private ButtonMapper currButtonMapper;
     private DBHelper dbHelper;
 
@@ -46,7 +44,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
         dbHelper.setDB(dbHelper.getWritableDatabase());
         setContentView(R.layout.main);
 
+        checkPermission();
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALL_LOG}, 2);
 
         List<Contact> contacts = dbHelper.selectAll();
         ButtonMapper.myIntent = this;
@@ -56,6 +56,21 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
         buttons.add(new ButtonMapper(3, new RelativeLayoutButton(this, R.id.button4), getItemByIndex(contacts, 3)));
     }
 
+    private void checkPermission() {
+        ArrayList<String> arrPerm = new ArrayList<>();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            arrPerm.add(Manifest.permission.READ_CONTACTS);
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+            arrPerm.add(Manifest.permission.READ_CALL_LOG);
+        }
+        if (!arrPerm.isEmpty()) {
+            String[] permissions = new String[arrPerm.size()];
+            permissions = arrPerm.toArray(permissions);
+            ActivityCompat.requestPermissions(this, permissions, MY_PERMISSIONS_REQUEST);
+        }
+    }
+
     public Context getContext() {
         return this.getApplicationContext();
     }
@@ -63,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
     @Override
     public void chooseContact(View v) {
         currButtonMapper = findButtonById(v.getId());
+//        currButtonMapper = buttons.findButtonById(v.getId());
         chooseContact();
     }
 
@@ -98,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
 
     @Override
     public void makeCall(View v) {
+//        currButtonMapper = buttons.findButtonById(v.getId());
         currButtonMapper = findButtonById(v.getId());
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
             startCallIntent(currButtonMapper.getContact().getNumber());
@@ -120,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+//        currButtonMapper = buttons.findButtonById(v.getId());
         currButtonMapper = findButtonById(v.getId());
         menu.add(0, MENU_UPDATE, 0, "Другой контакт...");
         menu.add(0, MENU_DELETE, 1, "Удалить");
@@ -155,20 +173,27 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
                     Toast.makeText(this, "Permission request was denied", Toast.LENGTH_LONG).show();
                 }
                 break;
+            case MY_PERMISSIONS_REQUEST:
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        String permission = permissions[i];
+                        if (Manifest.permission.READ_CONTACTS.equals(permission)) {
+                            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                                // you now have permission
+                            }
+                        }
+                        if (Manifest.permission.READ_CALL_LOG.equals(permission)) {
+                            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                                // you now have permission
+                            }
+                        }
+                    }
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, "Permission request was denied", Toast.LENGTH_LONG).show();
+                }
+                break;
         }
-    }
-
-
-    private void getCallDetails() {
-
-        String[] projection = new String[]{CallLog.Calls.CACHED_NAME, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DATE};
-        Cursor cursor = getContentResolver().query(CallLog.Calls.CONTENT_URI, projection, null, null, null);
-        while (cursor.moveToNext()) {
-            String name = cursor.getString(0);
-            String number = cursor.getString(1);
-            String type = cursor.getString(2); // https://developer.android.com/reference/android/provider/CallLog.Calls.html#TYPE
-            String time = cursor.getString(3); // epoch time - https://developer.android.com/reference/java/text/DateFormat.html#parse(java.lang.String
-        }
-        cursor.close();
     }
 }
