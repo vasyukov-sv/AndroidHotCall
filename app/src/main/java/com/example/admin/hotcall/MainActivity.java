@@ -14,7 +14,6 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-import com.example.admin.hotcall.Button.RelativeLayoutButton;
 import com.example.admin.hotcall.common.DBHelper;
 import com.example.admin.hotcall.common.Utils;
 import com.example.admin.hotcall.loader.AsyncResponse;
@@ -29,7 +28,6 @@ import java.util.List;
 
 import static com.example.admin.hotcall.common.Utils.MY_PERMISSIONS_REQUEST;
 import static com.example.admin.hotcall.common.Utils.PERMISSION_REQUEST_CALL;
-import static com.example.admin.hotcall.common.Utils.getItemByIndex;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse, MyIntent {
     private static final int MENU_DELETE = 1;
@@ -53,12 +51,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
 
         List<Contact> contacts = dbHelper.selectAll();
         buttons = new RButton4().constructRelButtons(this,contacts);
-        new ButtonMapper(0, new RelativeLayoutButton(this, R.id.button1), getItemByIndex(contacts, 0));
-//        ButtonMapper.myIntent = this;
-//        buttons.add(new ButtonMapper(0, new RelativeLayoutButton(this, R.id.button1), getItemByIndex(contacts, 0)));
-//        buttons.add(new ButtonMapper(1, new RelativeLayoutButton(this, R.id.button2), getItemByIndex(contacts, 1)));
-//        buttons.add(new ButtonMapper(2, new RelativeLayoutButton(this, R.id.button3), getItemByIndex(contacts, 2)));
-//        buttons.add(new ButtonMapper(3, new RelativeLayoutButton(this, R.id.button4), getItemByIndex(contacts, 3)));
     }
 
     private void checkPermission() {
