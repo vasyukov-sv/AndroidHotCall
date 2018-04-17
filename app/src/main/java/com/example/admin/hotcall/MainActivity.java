@@ -18,16 +18,14 @@ import com.example.admin.hotcall.common.DBHelper;
 import com.example.admin.hotcall.common.Utils;
 import com.example.admin.hotcall.loader.AsyncResponse;
 import com.example.admin.hotcall.loader.ContactsJob;
-import com.example.admin.hotcall.obj.ButtonMapper;
+import com.example.admin.hotcall.mappers.ButtonMapper;
 import com.example.admin.hotcall.obj.Contact;
-import com.example.admin.hotcall.obj.MyIntent;
-import com.example.admin.hotcall.obj.RButton4;
+import com.example.admin.hotcall.mappers.MyIntent;
+import com.example.admin.hotcall.mappers.RButton4;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.admin.hotcall.common.Utils.MY_PERMISSIONS_REQUEST;
-import static com.example.admin.hotcall.common.Utils.PERMISSION_REQUEST_CALL;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse, MyIntent {
     private static final int MENU_DELETE = 1;
@@ -95,26 +93,18 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
             return;
         }
 
-        //зачем опять к базе лезть
-        List<Contact> contacts = dbHelper.selectAll();
-        if (contacts.contains(contact)) {
+        if (buttons.getAllContacts().contains(contact)) {
             Toast.makeText(this, "Такой контакт уже существует", Toast.LENGTH_LONG).show();
         } else {
             dbHelper.insert(contact);
             buttons.update(currButtonMapper, contact);
-//            currButtonMapper.update(contact);
         }
     }
 
     @Override
     public void makeCall(View v) {
         currButtonMapper = buttons.findButtonById(v.getId());
-//        currButtonMapper = findButtonById(v.getId());
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-            startCallIntent(currButtonMapper.getContact().getNumber());
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, PERMISSION_REQUEST_CALL);
-        }
+        startCallIntent(currButtonMapper.getContact().getNumber());
     }
 
     private void startCallIntent(final String number) {
@@ -132,22 +122,15 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         currButtonMapper = buttons.findButtonById(v.getId());
-//        currButtonMapper = findButtonById(v.getId());
         menu.add(0, MENU_UPDATE, 0, "Другой контакт...");
         menu.add(0, MENU_DELETE, 1, "Удалить");
     }
-
-//    private ButtonMapper findButtonById(final int id) {
-//
-//        return buttons.stream().filter(buttonMapper -> buttonMapper.getRelativeLayoutButton().getId() == id).findFirst().orElse(null);
-//    }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_DELETE:
                 dbHelper.delete(currButtonMapper.getContact().getId());
-//                currButtonMapper.update(null);
                 buttons.update(currButtonMapper, null);
                 break;
             case MENU_UPDATE:
@@ -164,12 +147,15 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
                 for (int i = 0; i < grantResults.length; i++) {
                     if (Manifest.permission.READ_CONTACTS.equals(permissions[i]) && grantResults[i] == PackageManager.PERMISSION_DENIED) {
                         Toast.makeText(this, "Permission request READ_CONTACTS was denied", Toast.LENGTH_LONG).show();
+                        this.finishAffinity();
                     }
                     if (Manifest.permission.READ_CALL_LOG.equals(permissions[i]) && grantResults[i] == PackageManager.PERMISSION_DENIED) {
                         Toast.makeText(this, "Permission request READ_CALL_LOG was denied", Toast.LENGTH_LONG).show();
+                        this.finishAffinity();
                     }
                     if (Manifest.permission.CALL_PHONE.equals(permissions[i]) && grantResults[i] == PackageManager.PERMISSION_DENIED) {
                         Toast.makeText(this, "Permission request CALL_PHONE was denied", Toast.LENGTH_LONG).show();
+                        this.finishAffinity();
                     }
                 }
                 break;

@@ -20,7 +20,6 @@ public class RelativeLayoutButton extends RelativeLayout {
         // if our context is not Activity we can't get View supplied by id
         if (!(context instanceof Activity)) return;
 
-
         // find relative layout by id
         View v = ((Activity) context).findViewById(id);
 
@@ -40,7 +39,6 @@ public class RelativeLayoutButton extends RelativeLayout {
         Button bt = new Button(context);
         bt.getBackground().setAlpha(64);
         this.setBackground(bt.getBackground());
-
 
         // copy all child from relative layout to this button
         while (layout.getChildCount() > 0) {
@@ -93,7 +91,6 @@ public class RelativeLayoutButton extends RelativeLayout {
             ((ImageView) v).setImageDrawable(drawable);
         }
     }
-
 
     // method for setting images by resource id
     public void setImageResource(int id, int image_resource_id) {

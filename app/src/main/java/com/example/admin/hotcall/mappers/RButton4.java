@@ -1,10 +1,11 @@
-package com.example.admin.hotcall.obj;
+package com.example.admin.hotcall.mappers;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import com.example.admin.hotcall.Button.RelativeLayoutButton;
 import com.example.admin.hotcall.R;
+import com.example.admin.hotcall.obj.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,6 @@ public class RButton4 {
     private MyIntent myIntent;
 
     public RButton4 constructRelButtons(MyIntent intent, List<Contact> contacts) {
-
         this.myIntent = intent;
 
         //create
@@ -27,7 +27,6 @@ public class RButton4 {
         buttons.add(createRButton(3, R.id.button4, getItemByIndex(contacts, 3)));
         return this;
     }
-
 
     public ButtonMapper findButtonById(final int id) {
         return buttons.stream().filter(buttonMapper -> buttonMapper.getRelativeLayoutButton().getId() == id).findFirst().orElse(null);
@@ -71,4 +70,14 @@ public class RButton4 {
         setButtonContext(buttonMapper.setContact(contact));
     }
 
+    public List<Contact> getAllContacts() {
+        List<Contact> list = new ArrayList<>();
+        for (ButtonMapper button : buttons) {
+            Contact contact = button.getContact();
+            if (contact != null) {
+                list.add(contact);
+            }
+        }
+        return list;
+    }
 }

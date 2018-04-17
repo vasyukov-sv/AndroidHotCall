@@ -1,4 +1,4 @@
-package com.example.admin.hotcall.obj;
+package com.example.admin.hotcall.mappers;
 
 import android.content.Context;
 import android.view.View;

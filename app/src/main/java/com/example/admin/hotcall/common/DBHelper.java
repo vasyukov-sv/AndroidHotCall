@@ -83,13 +83,7 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 bitmapdata = cursor.getBlob(cursor.getColumnIndex("photo"));
-                CallDuration duration = new CallDuration(
-                        cursor.getColumnIndex("monthIncomingCall"),
-                        cursor.getColumnIndex("allTimeIncomingCall"),
-                        cursor.getColumnIndex("monthOutgoingCall"),
-                        cursor.getColumnIndex("allTimeOutgoingCall"),
-                        cursor.getColumnIndex("lastDateSync")
-                        );
+                CallDuration duration = new CallDuration(cursor.getColumnIndex("monthIncomingCall"), cursor.getColumnIndex("allTimeIncomingCall"), cursor.getColumnIndex("monthOutgoingCall"), cursor.getColumnIndex("allTimeOutgoingCall"), cursor.getColumnIndex("lastDateSync"));
                 Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")), BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length), duration);
                 contacts.add(contact);
                 cursor.moveToNext();
@@ -111,13 +105,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.moveToFirst();
         byte[] bitmapdata = cursor.getBlob(cursor.getColumnIndex("photo"));
-        CallDuration duration = new CallDuration(
-                cursor.getColumnIndex("monthIncomingCall"),
-                cursor.getColumnIndex("allTimeIncomingCall"),
-                cursor.getColumnIndex("monthOutgoingCall"),
-                cursor.getColumnIndex("allTimeOutgoingCall"),
-                cursor.getColumnIndex("lastDateSync")
-        );
+        CallDuration duration = new CallDuration(cursor.getColumnIndex("monthIncomingCall"), cursor.getColumnIndex("allTimeIncomingCall"), cursor.getColumnIndex("monthOutgoingCall"), cursor.getColumnIndex("allTimeOutgoingCall"), cursor.getColumnIndex("lastDateSync"));
         Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")), BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length), duration);
         cursor.close();
         return contact;
