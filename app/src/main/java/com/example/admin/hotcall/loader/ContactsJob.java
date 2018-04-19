@@ -21,13 +21,14 @@ import static android.content.ContentValues.TAG;
 
 public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
 
-    private static final String[] PROJECTION = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME};
+    private static final String[] PROJECTION = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts.HAS_PHONE_NUMBER};
     private static final String[] PROJECTION_PHONE = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
 
     private final Uri contactUri;
     private final ContentResolver contentResolver;
     private final AsyncResponse delegate;
-    private String contactID;
+
+    private String msg;
 
     public ContactsJob(Uri contactUri, ContentResolver contentResolver, AsyncResponse delegate) {
         this.contactUri = contactUri;
@@ -38,22 +39,29 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
     @Override
     protected void onPostExecute(Contact contact) {
         super.onPostExecute(contact);
-        delegate.processContacts(contact);
+        delegate.processContacts(contact, msg);
     }
 
     @Override
     protected Contact doInBackground(ButtonMapper... buttonMappers) {
-
+        msg = "";
         String name = null;
         String number = null;
+        String contactID = null;
+        Boolean hasPhoneNumber = null;
+
         Cursor cursor = contentResolver.query(contactUri, PROJECTION, null, null, null);
         if (cursor.moveToFirst()) {
             name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
             contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-            // HAS_PHONE_NUMBER =   An indicator of whether this contact has at least one phone number.
+            hasPhoneNumber = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0;
         }
-
         cursor.close();
+
+        if (Boolean.FALSE.equals(hasPhoneNumber)) {
+            msg = "У контакта нет телефона";
+            return null;
+        }
         Cursor cursorPhone = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, PROJECTION_PHONE, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ? AND " + ContactsContract.CommonDataKinds.Phone.TYPE + " = " + ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE,
 
                 new String[]{contactID}, null);
@@ -62,7 +70,7 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
         }
         cursorPhone.close();
 
-        Bitmap photo = retrieveContactPhoto();
+        Bitmap photo = retrieveContactPhoto(contactID);
         CallDuration duration = retrieveCallDuration(number);
 
         return new Contact(buttonMappers[0].getId(), Integer.valueOf(contactID), name, number, photo, duration);
@@ -88,7 +96,7 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
         return new CallDuration(456, 15640, 666, 555, 2);
     }
 
-    private Bitmap retrieveContactPhoto() {
+    private Bitmap retrieveContactPhoto(String contactID) {
         Bitmap photo = null;
         try {
             InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(contentResolver, ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.valueOf(contactID)));

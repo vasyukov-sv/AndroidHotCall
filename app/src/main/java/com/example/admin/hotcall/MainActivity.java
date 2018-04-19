@@ -19,9 +19,9 @@ import com.example.admin.hotcall.common.Utils;
 import com.example.admin.hotcall.loader.AsyncResponse;
 import com.example.admin.hotcall.loader.ContactsJob;
 import com.example.admin.hotcall.mappers.ButtonMapper;
-import com.example.admin.hotcall.obj.Contact;
 import com.example.admin.hotcall.mappers.MyIntent;
 import com.example.admin.hotcall.mappers.RButton4;
+import com.example.admin.hotcall.obj.Contact;
 
 import java.util.ArrayList;
 
@@ -88,7 +88,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
     }
 
     @Override
-    public void processContacts(Contact contact) {
+    public void processContacts(Contact contact, String errorMsg) {
+        if (errorMsg != null && !errorMsg.isEmpty()) {
+            Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show();
+        }
         if (contact == null) {
             return;
         }
