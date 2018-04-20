@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.util.Pair;
 import com.example.admin.hotcall.mappers.ButtonMapper;
 import com.example.admin.hotcall.obj.CallDuration;
 import com.example.admin.hotcall.obj.Contact;
@@ -21,7 +22,7 @@ import static android.content.ContentValues.TAG;
 
 public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
 
-    private static final String[] PROJECTION = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts.HAS_PHONE_NUMBER};
+    private static final String[] PROJECTION_ID_NAME = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.Contacts.HAS_PHONE_NUMBER};
     private static final String[] PROJECTION_PHONE = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
 
     private final Uri contactUri;
@@ -49,14 +50,7 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
         String number = null;
         String contactID = null;
         Boolean hasPhoneNumber = null;
-
-        Cursor cursor = contentResolver.query(contactUri, PROJECTION, null, null, null);
-        if (cursor.moveToFirst()) {
-            name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-            contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-            hasPhoneNumber = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0;
-        }
-        cursor.close();
+        Pair<String, String> contact = getContactIdAndName();
 
         if (Boolean.FALSE.equals(hasPhoneNumber)) {
             msg = "У контакта нет телефона";
@@ -74,6 +68,18 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
         CallDuration duration = retrieveCallDuration(number);
 
         return new Contact(buttonMappers[0].getId(), Integer.valueOf(contactID), name, number, photo, duration);
+    }
+
+    private Pair<String, String> getContactIdAndName() {
+        Cursor cursor = contentResolver.query(contactUri, PROJECTION_ID_NAME, null, null, null);
+        String name = null;
+        String contactID = null;
+        if (cursor.moveToFirst() && cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+            contactID = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+            name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+        }
+        cursor.close();
+        return new Pair<>(contactID, name);
     }
 
     private CallDuration retrieveCallDuration(String number) {
