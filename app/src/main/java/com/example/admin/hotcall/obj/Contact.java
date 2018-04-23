@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 public class Contact {
     private final int id;
-    private final int idContact;
+    private final long idContact;
     private final String name;
     private final String number;
     private Bitmap photo;
@@ -19,7 +19,7 @@ public class Contact {
         this.duration = duration;
     }
 
-    public int getIdContact() {
+    public long getIdContact() {
         return idContact;
     }
 
@@ -49,9 +49,12 @@ public class Contact {
 
     @Override
     public int hashCode() {
-        int result = idContact;
-        result = 31 * result + name.hashCode();
-        result = 31 * result + number.hashCode();
+        int result = getId();
+        result = 31 * result + (int) (getIdContact() ^ (getIdContact() >>> 32));
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getNumber().hashCode();
+        result = 31 * result + (getPhoto() != null ? getPhoto().hashCode() : 0);
+        result = 31 * result + (getDuration() != null ? getDuration().hashCode() : 0);
         return result;
     }
 

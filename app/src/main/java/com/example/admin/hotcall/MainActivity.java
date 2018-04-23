@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
     }
 
     private void chooseContact() {
-        startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), Utils.PICK_CONTACT_REQUEST);
+        startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI), Utils.PICK_CONTACT_REQUEST);
     }
 
     @Override
