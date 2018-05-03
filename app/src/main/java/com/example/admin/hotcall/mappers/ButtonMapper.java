@@ -7,7 +7,7 @@ public class ButtonMapper {
 
     private final RelativeLayoutButton relativeLayoutButton;
     private Contact contact;
-    private int id;
+    private final int id;
 
     ButtonMapper(int id, RelativeLayoutButton relativeLayoutButton, Contact contact) {
         this.relativeLayoutButton = relativeLayoutButton;

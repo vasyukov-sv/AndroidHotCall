@@ -64,11 +64,11 @@ public class CallDuration {
     }
 
     public String getOutgoingCall() {
-        return "Исх." + getHMString(getMonthOutgoingCall(), getAllTimeOutgoingCall());
+        return getHMString(getMonthOutgoingCall(), getAllTimeOutgoingCall());
     }
 
     public String getIncomingCall() {
-        return "Вх." + getHMString(getMonthIncomingCall(), getAllTimeIncomingCall());
+        return getHMString(getMonthIncomingCall(), getAllTimeIncomingCall());
     }
 
     private String getHMString(long durationMonth, long durationAlltime) {

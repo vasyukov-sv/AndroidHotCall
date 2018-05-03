@@ -24,8 +24,6 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
     private final ContentResolver contentResolver;
     private final AsyncResponse delegate;
 
-    private String msg;
-
     public ContactsJob(Uri uri, ContentResolver contentResolver, AsyncResponse delegate) {
         this.uri = uri;
         this.contentResolver = contentResolver;
@@ -35,7 +33,7 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
     @Override
     protected void onPostExecute(Contact contact) {
         super.onPostExecute(contact);
-        delegate.processContacts(contact, msg);
+        delegate.processContacts(contact);
     }
 
     @Override
@@ -57,7 +55,7 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
         return new Contact(buttonMappers[0].getId(), (int) contactID, name, number, photo, duration);
     }
 
-    private CallDuration retrieveCallDuration(String number) {
+    public CallDuration retrieveCallDuration(String number) {
         long allTimeIncomingCall = 0;
         long allTimeOutgoingCall = 0;
 

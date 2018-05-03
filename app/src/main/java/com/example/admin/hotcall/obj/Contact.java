@@ -7,8 +7,8 @@ public class Contact {
     private final long idContact;
     private final String name;
     private final String number;
-    private Bitmap photo;
-    private CallDuration duration;
+    private final Bitmap photo;
+    private final CallDuration duration;
 
     public Contact(int id, int idContact, String name, String number, Bitmap photo, CallDuration duration) {
         this.id = id;
@@ -60,10 +60,5 @@ public class Contact {
 
     public CallDuration getDuration() {
         return duration;
-    }
-
-    public Contact setDuration(CallDuration duration) {
-        this.duration = duration;
-        return this;
     }
 }

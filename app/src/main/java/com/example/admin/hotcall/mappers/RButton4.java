@@ -11,11 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.admin.hotcall.common.Utils.getHumanPhone;
-import static com.example.admin.hotcall.common.Utils.getItemByIndex;
 
 public class RButton4 {
     private final List<ButtonMapper> buttons = new ArrayList<>();
     private MyIntent myIntent;
+
+    private static Contact getItemByIndex(List<Contact> list, int id) {
+        Contact contact = list.stream().filter(a -> a.getId() == id).findFirst().orElse(null);
+        syncCallTime(contact);
+        return contact;
+    }
+
+    private static void syncCallTime(Contact contact) {
+        if (contact == null) {
+            return;
+        }
+
+//        new ContactsJob().retrieveCallDuration(contact.getNumber());
+    }
 
     public RButton4 constructRelButtons(MyIntent intent, List<Contact> contacts) {
         this.myIntent = intent;
@@ -43,7 +56,7 @@ public class RButton4 {
         if (contact != null) {
             relativeLayoutButton.setText(R.id.button_text, String.format("%s\n%s", contact.getName(), getHumanPhone(contact.getNumber())));
             if (contact.getDuration() != null) {
-                relativeLayoutButton.setText(R.id.button_info, String.format("%s\n%s", contact.getDuration().getIncomingCall(), contact.getDuration().getOutgoingCall()));
+                relativeLayoutButton.setText(R.id.button_info, String.format("%s - %s", contact.getDuration().getIncomingCall(), contact.getDuration().getOutgoingCall()));
             }
             relativeLayoutButton.setOnClickListener(getListener());
             relativeLayoutButton.setImageDrawable(R.id.button_image, new BitmapDrawable(myIntent.getContext().getResources(), contact.getPhoto()));

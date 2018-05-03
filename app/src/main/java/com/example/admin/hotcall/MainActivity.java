@@ -88,10 +88,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
     }
 
     @Override
-    public void processContacts(Contact contact, String errorMsg) {
-        if (errorMsg != null && !errorMsg.isEmpty()) {
-            Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show();
-        }
+    public void processContacts(Contact contact) {
         if (contact == null) {
             return;
         }
