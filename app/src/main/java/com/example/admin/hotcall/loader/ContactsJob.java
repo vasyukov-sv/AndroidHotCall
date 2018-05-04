@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.CallLog;
 import android.provider.ContactsContract;
 import com.example.admin.hotcall.mappers.ButtonMapper;
 import com.example.admin.hotcall.obj.CallDuration;
@@ -55,32 +54,36 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
         return new Contact(buttonMappers[0].getId(), (int) contactID, name, number, photo, duration);
     }
 
-    public CallDuration retrieveCallDuration(String number) {
-        long allTimeIncomingCall = 0;
-        long allTimeOutgoingCall = 0;
-
-        String[] projection = new String[]{CallLog.Calls.DURATION, CallLog.Calls.TYPE, CallLog.Calls.DATE};
-        String selectionClause = CallLog.Calls.NUMBER + " = ?";
-
-        Cursor cursor = contentResolver.query(CallLog.Calls.CONTENT_URI, projection, selectionClause, new String[]{number}, null);
-        while (cursor.moveToNext()) {
-            long duration = cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DURATION));
-            int callType = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
-
-            switch (callType) {
-                case CallLog.Calls.INCOMING_TYPE:
-                    allTimeIncomingCall += duration;
-                    break;
-                case CallLog.Calls.OUTGOING_TYPE:
-                    allTimeOutgoingCall += duration;
-                    break;
-            }
-
-        }
-        cursor.close();
-
-        return new CallDuration(allTimeIncomingCall, allTimeIncomingCall, allTimeOutgoingCall, allTimeOutgoingCall, 2);
+    private CallDuration retrieveCallDuration(String number) {
+        return null;
     }
+
+//    public CallDuration retrieveCallDuration(String number) {
+//        long allTimeIncomingCall = 0;
+//        long allTimeOutgoingCall = 0;
+//
+//        String[] projection = new String[]{CallLog.Calls.DURATION, CallLog.Calls.TYPE, CallLog.Calls.DATE};
+//        String selectionClause = CallLog.Calls.NUMBER + " = ?";
+//
+//        Cursor cursor = contentResolver.query(CallLog.Calls.CONTENT_URI, projection, selectionClause, new String[]{number}, null);
+//        while (cursor.moveToNext()) {
+//            long duration = cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DURATION));
+//            int callType = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
+//
+//            switch (callType) {
+//                case CallLog.Calls.INCOMING_TYPE:
+//                    allTimeIncomingCall += duration;
+//                    break;
+//                case CallLog.Calls.OUTGOING_TYPE:
+//                    allTimeOutgoingCall += duration;
+//                    break;
+//            }
+//
+//        }
+//        cursor.close();
+//
+//        return new CallDuration(allTimeIncomingCall, allTimeIncomingCall, allTimeOutgoingCall, allTimeOutgoingCall, 2);
+//    }
 
     private Bitmap retrieveContactPhoto(long contactID) {
         Bitmap photo = null;
