@@ -16,7 +16,12 @@ import java.io.InputStream;
 
 public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
 
-    private static final String[] PROJECTION = new String[]{ContactsContract.CommonDataKinds.Phone.CONTACT_ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
+    private static final String[] PROJECTION = new String[]
+            {ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Phone.NUMBER,
+                    ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
+            };
 
     private final Uri uri;
     private final ContentResolver contentResolver;
@@ -43,7 +48,8 @@ public class ContactsJob extends AsyncTask<ButtonMapper, Void, Contact> {
             cursor.close();
             return null;
         }
-        String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+        String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER));
         String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
         long contactID = cursor.getLong(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
         Bitmap photo = retrieveContactPhoto(contactID);

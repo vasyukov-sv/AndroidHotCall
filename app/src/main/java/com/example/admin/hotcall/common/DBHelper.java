@@ -73,7 +73,12 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 bitmapdata = cursor.getBlob(cursor.getColumnIndex("photo"));
-                CallDuration duration = new CallDuration(cursor.getInt(cursor.getColumnIndex("monthIncomingCall")), cursor.getInt(cursor.getColumnIndex("allTimeIncomingCall")), cursor.getInt(cursor.getColumnIndex("monthOutgoingCall")), cursor.getInt(cursor.getColumnIndex("allTimeOutgoingCall")), cursor.getInt(cursor.getColumnIndex("lastDateSync")));
+                CallDuration duration = new CallDuration(
+                        cursor.getLong(cursor.getColumnIndex("monthIncomingCall")),
+                        cursor.getLong(cursor.getColumnIndex("allTimeIncomingCall")),
+                        cursor.getLong(cursor.getColumnIndex("monthOutgoingCall")),
+                        cursor.getLong(cursor.getColumnIndex("allTimeOutgoingCall")),
+                        cursor.getLong(cursor.getColumnIndex("lastDateSync")));
                 Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")), BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length), duration);
                 contacts.add(contact);
                 cursor.moveToNext();

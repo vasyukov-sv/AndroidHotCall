@@ -49,16 +49,22 @@ public class CallDurationJob extends AsyncTask<Contact, Void, Contact> {
         Cursor cursor = contentResolver.query(CallLog.Calls.CONTENT_URI, PROJECTION, SELECTIONCLAUSE, new String[]{number, String.valueOf(lastSuccessUpdate)}, null);
         while (cursor.moveToNext()) {
             long duration = cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DURATION));
+            long datecall = cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DATE));
             int callType = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
+            boolean checkmonth = datecall > firstDay;
 
             switch (callType) {
                 case CallLog.Calls.INCOMING_TYPE:
                     allTimeIncomingCall += duration;
-                    monthIncomingCall += duration;
+                    if (checkmonth) {
+                        monthIncomingCall += duration;
+                    }
                     break;
                 case CallLog.Calls.OUTGOING_TYPE:
                     allTimeOutgoingCall += duration;
-                    monthOutgoingCall += duration;
+                    if (checkmonth) {
+                        monthOutgoingCall += duration;
+                    }
                     break;
             }
         }
