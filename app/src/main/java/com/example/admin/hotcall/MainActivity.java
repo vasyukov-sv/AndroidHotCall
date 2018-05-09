@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
 
     private void startCallIntent(final String number) {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.putExtra("com.android.phone.extra.slot", 0); //For sim 1
         callIntent.setData(Uri.parse("tel:" + number));
         try {
             startActivity(callIntent);
