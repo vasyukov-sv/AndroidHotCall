@@ -62,8 +62,7 @@ public class Contact {
         return duration;
     }
 
-    public Contact setDuration(CallDuration duration) {
+    public void setDuration(CallDuration duration) {
         this.duration = duration;
-        return this;
     }
 }

@@ -3,11 +3,11 @@ package com.example.admin.hotcall.obj;
 import java.util.Locale;
 
 public class CallDuration {
-    private long monthIncomingCall;
-    private long allTimeIncomingCall;
-    private long monthOutgoingCall;
-    private long allTimeOutgoingCall;
-    private long lastSuccess;
+    private final long monthIncomingCall;
+    private final long allTimeIncomingCall;
+    private final long monthOutgoingCall;
+    private final long allTimeOutgoingCall;
+    private final long lastSuccess;
 
     public CallDuration(long monthIncomingCall, long allTimeIncomingCall, long monthOutgoingCall, long allTimeOutgoingCall, long lastSuccess) {
         this.monthIncomingCall = monthIncomingCall;
@@ -22,45 +22,20 @@ public class CallDuration {
         return lastSuccess;
     }
 
-    public CallDuration setLastSuccess(long lastSuccess) {
-        this.lastSuccess = lastSuccess;
-        return this;
-    }
-
     public long getMonthIncomingCall() {
         return monthIncomingCall;
-    }
-
-    public CallDuration setMonthIncomingCall(long monthIncomingCall) {
-        this.monthIncomingCall = monthIncomingCall;
-        return this;
     }
 
     public long getAllTimeIncomingCall() {
         return allTimeIncomingCall;
     }
 
-    public CallDuration setAllTimeIncomingCall(long allTimeIncomingCall) {
-        this.allTimeIncomingCall = allTimeIncomingCall;
-        return this;
-    }
-
     public long getMonthOutgoingCall() {
         return monthOutgoingCall;
     }
 
-    public CallDuration setMonthOutgoingCall(long monthOutgoingCall) {
-        this.monthOutgoingCall = monthOutgoingCall;
-        return this;
-    }
-
     public long getAllTimeOutgoingCall() {
         return allTimeOutgoingCall;
-    }
-
-    public CallDuration setAllTimeOutgoingCall(long allTimeOutgoingCall) {
-        this.allTimeOutgoingCall = allTimeOutgoingCall;
-        return this;
     }
 
     public String getOutgoingCall() {

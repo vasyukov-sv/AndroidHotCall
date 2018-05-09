@@ -17,17 +17,7 @@ public class RButton4 {
     private MyIntent myIntent;
 
     private static Contact getItemByIndex(List<Contact> list, int id) {
-        Contact contact = list.stream().filter(a -> a.getId() == id).findFirst().orElse(null);
-        syncCallTime(contact);
-        return contact;
-    }
-
-    private static void syncCallTime(Contact contact) {
-        if (contact == null) {
-            return;
-        }
-
-//        new ContactsJob().retrieveCallDuration(contact.getNumber());
+        return list.stream().filter(a -> a.getId() == id).findFirst().orElse(null);
     }
 
     public RButton4 constructRelButtons(MyIntent intent, List<Contact> contacts) {
@@ -45,6 +35,10 @@ public class RButton4 {
         return buttons.stream().filter(buttonMapper -> buttonMapper.getRelativeLayoutButton().getId() == id).findFirst().orElse(null);
     }
 
+    private ButtonMapper findButtonByContactId(final int id) {
+        return buttons.stream().filter(buttonMapper -> buttonMapper.getId() == id).findFirst().orElse(null);
+    }
+
     private ButtonMapper createRButton(int id, int buttonId, Contact contact) {
         return setButtonContext(new ButtonMapper(id, new RelativeLayoutButton((Context) myIntent, buttonId), contact));
     }
@@ -55,9 +49,6 @@ public class RButton4 {
 
         if (contact != null) {
             relativeLayoutButton.setText(R.id.button_text, String.format("%s\n%s", contact.getName(), getHumanPhone(contact.getNumber())));
-            if (contact.getDuration() != null) {
-                relativeLayoutButton.setText(R.id.button_info, String.format("%s - %s", contact.getDuration().getIncomingCall(), contact.getDuration().getOutgoingCall()));
-            }
             relativeLayoutButton.setOnClickListener(getListener());
             relativeLayoutButton.setImageDrawable(R.id.button_image, new BitmapDrawable(myIntent.getContext().getResources(), contact.getPhoto()));
             myIntent.registerForContextMenu(relativeLayoutButton);
@@ -92,5 +83,23 @@ public class RButton4 {
             }
         }
         return list;
+    }
+
+    public List<ButtonMapper> getAllButtonMapper() {
+        List<ButtonMapper> list = new ArrayList<>();
+        buttons.forEach(button -> {
+            Contact contact = button.getContact();
+            if (contact != null) {
+                list.add(button);
+            }
+        });
+        return list;
+    }
+
+    public void updateDuration(Contact contact) {
+        ButtonMapper buttonMapper = findButtonByContactId(contact.getId());
+        if (contact.getDuration() != null) {
+            buttonMapper.getRelativeLayoutButton().setText(R.id.button_info, String.format("%s - %s", contact.getDuration().getIncomingCall(), contact.getDuration().getOutgoingCall()));
+        }
     }
 }

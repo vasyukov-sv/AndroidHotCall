@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.admin.hotcall.common.DBHelper;
 import com.example.admin.hotcall.common.Utils;
 import com.example.admin.hotcall.loader.AsyncResponse;
+import com.example.admin.hotcall.loader.CallDurationJob;
 import com.example.admin.hotcall.loader.ContactsJob;
 import com.example.admin.hotcall.mappers.ButtonMapper;
 import com.example.admin.hotcall.mappers.MyIntent;
@@ -43,6 +44,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
         setContentView(R.layout.main);
         checkPermission();
         buttons = new RButton4().constructRelButtons(this, dbHelper.selectAll());
+        buttons.getAllButtonMapper().forEach(
+                buttonMapper -> new CallDurationJob(getContentResolver(),this).execute(buttonMapper.getContact())
+        );
+
     }
 
     private void checkPermission() {
@@ -98,7 +103,17 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
         } else {
             dbHelper.insert(contact);
             buttons.update(currButtonMapper, contact);
+            new CallDurationJob(getContentResolver(), this).execute(contact);
         }
+    }
+
+    @Override
+    public void processContactDurationCall(Contact contact) {
+        if (contact == null || contact.getDuration() == null) {
+            return;
+        }
+        dbHelper.updateDuration(contact);
+        buttons.updateDuration(contact);
     }
 
     @Override

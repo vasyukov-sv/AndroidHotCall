@@ -30,6 +30,6 @@ public class Utils {
         localCalendar.clear(Calendar.SECOND);
         localCalendar.clear(Calendar.MILLISECOND);
         localCalendar.set(Calendar.DAY_OF_MONTH, 1);
-        return localCalendar.getTimeInMillis()/1000 ;
+        return localCalendar.getTimeInMillis();
     }
 }

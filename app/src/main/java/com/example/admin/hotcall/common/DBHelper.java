@@ -61,11 +61,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("name", contact.getName());
         cv.put("number", contact.getNumber());
         cv.put("photo", stream.toByteArray());
-        cv.put("lastDateSync", contact.getDuration().getLastSuccess());
-        cv.put("monthIncomingCall", contact.getDuration().getMonthIncomingCall());
-        cv.put("allTimeIncomingCall", contact.getDuration().getAllTimeIncomingCall());
-        cv.put("monthOutgoingCall", contact.getDuration().getMonthOutgoingCall());
-        cv.put("allTimeOutgoingCall", contact.getDuration().getAllTimeOutgoingCall());
 
         db.insert(Utils.T_CONTACTS, null, cv);
     }
@@ -78,13 +73,7 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 bitmapdata = cursor.getBlob(cursor.getColumnIndex("photo"));
-                CallDuration duration = new CallDuration(
-                        cursor.getInt(cursor.getColumnIndex("monthIncomingCall")),
-                        cursor.getInt(cursor.getColumnIndex("allTimeIncomingCall")),
-                        cursor.getInt(cursor.getColumnIndex("monthOutgoingCall")),
-                        cursor.getInt(cursor.getColumnIndex("allTimeOutgoingCall")),
-                        cursor.getInt(cursor.getColumnIndex("lastDateSync"))
-                );
+                CallDuration duration = new CallDuration(cursor.getInt(cursor.getColumnIndex("monthIncomingCall")), cursor.getInt(cursor.getColumnIndex("allTimeIncomingCall")), cursor.getInt(cursor.getColumnIndex("monthOutgoingCall")), cursor.getInt(cursor.getColumnIndex("allTimeOutgoingCall")), cursor.getInt(cursor.getColumnIndex("lastDateSync")));
                 Contact contact = new Contact(cursor.getInt(cursor.getColumnIndex("id")), cursor.getInt(cursor.getColumnIndex("idcontact")), cursor.getString(cursor.getColumnIndex("name")), cursor.getString(cursor.getColumnIndex("number")), BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length), duration);
                 contacts.add(contact);
                 cursor.moveToNext();
@@ -96,5 +85,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void setDB(SQLiteDatabase db) {
         this.db = db;
+    }
+
+    public void updateDuration(Contact contact) {
+        CallDuration duration = contact.getDuration();
+        ContentValues cv = new ContentValues();
+        cv.put("lastDateSync", duration.getLastSuccess());
+        cv.put("monthIncomingCall", duration.getMonthIncomingCall());
+        cv.put("allTimeIncomingCall", duration.getAllTimeIncomingCall());
+        cv.put("monthOutgoingCall", duration.getMonthOutgoingCall());
+        cv.put("allTimeOutgoingCall", duration.getAllTimeOutgoingCall());
+
+        db.update(Utils.T_CONTACTS, cv, "id = ?", new String[]{String.valueOf(contact.getId())});
     }
 }
