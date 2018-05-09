@@ -17,7 +17,12 @@ public class RButton4 {
     private MyIntent myIntent;
 
     private static Contact getItemByIndex(List<Contact> list, int id) {
-        return list.stream().filter(a -> a.getId() == id).findFirst().orElse(null);
+        for (Contact a : list) {
+            if (a.getId() == id) {
+                return a;
+            }
+        }
+        return null;
     }
 
     public RButton4 constructRelButtons(MyIntent intent, List<Contact> contacts) {
@@ -32,11 +37,21 @@ public class RButton4 {
     }
 
     public ButtonMapper findButtonById(final int id) {
-        return buttons.stream().filter(buttonMapper -> buttonMapper.getRelativeLayoutButton().getId() == id).findFirst().orElse(null);
+        for (ButtonMapper buttonMapper : buttons) {
+            if (buttonMapper.getRelativeLayoutButton().getId() == id) {
+                return buttonMapper;
+            }
+        }
+        return null;
     }
 
     private ButtonMapper findButtonByContactId(final int id) {
-        return buttons.stream().filter(buttonMapper -> buttonMapper.getId() == id).findFirst().orElse(null);
+        for (ButtonMapper buttonMapper : buttons) {
+            if (buttonMapper.getId() == id) {
+                return buttonMapper;
+            }
+        }
+        return null;
     }
 
     private ButtonMapper createRButton(int id, int buttonId, Contact contact) {
@@ -87,12 +102,12 @@ public class RButton4 {
 
     public List<ButtonMapper> getAllButtonMapper() {
         List<ButtonMapper> list = new ArrayList<>();
-        buttons.forEach(button -> {
+        for (ButtonMapper button : buttons) {
             Contact contact = button.getContact();
             if (contact != null) {
                 list.add(button);
             }
-        });
+        }
         return list;
     }
 

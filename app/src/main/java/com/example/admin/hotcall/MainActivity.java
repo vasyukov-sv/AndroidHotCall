@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, My
         setContentView(R.layout.main);
         checkPermission();
         buttons = new RButton4().constructRelButtons(this, dbHelper.selectAll());
-        buttons.getAllButtonMapper().forEach(
-                buttonMapper -> new CallDurationJob(getContentResolver(),this).execute(buttonMapper.getContact())
-        );
+        for (ButtonMapper buttonMapper : buttons.getAllButtonMapper()) {
+            new CallDurationJob(getContentResolver(), this).execute(buttonMapper.getContact());
+        }
 
     }
 
